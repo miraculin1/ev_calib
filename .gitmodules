@@ -1,0 +1,15 @@
+[submodule "src/kalibr"]
+	path = src/kalibr
+	url = https://github.com/ethz-asl/kalibr.git
+[submodule "src/simple_image_recon"]
+	path = src/simple_image_recon
+	url = https://github.com/berndpfrommer/simple_image_recon.git
+[submodule "src/event_camera_msgs"]
+	path = src/event_camera_msgs
+	url = https://github.com/ros-event-camera/event_camera_msgs.git
+[submodule "src/simple_image_recon_lib"]
+	path = src/simple_image_recon_lib
+	url = https://github.com/berndpfrommer/simple_image_recon_lib.git
+[submodule "src/event_camera_codecs"]
+	path = src/event_camera_codecs
+	url = https://github.com/ros-event-camera/event_camera_codecs.git
