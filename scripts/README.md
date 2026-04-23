@@ -4,20 +4,38 @@
 
 - [README.md](/workspace/calib_nail/README.md)
 
-这个目录提供了一个针对单事件相机 ROS1 bag 的内参标定流程。当前主入口是 `scripts/event_camera_intrinsics_calib.sh`，流程分两步：
+这个目录提供了一组围绕事件相机内参标定的辅助脚本。当前完整流程是：
 
-1. 用 `rosrun simple_image_recon bag_to_frames` 将事件流重建成图像 bag。
-2. 用 `rosrun kalibr kalibr_calibrate_cameras` 对重建图像话题做内参标定。
+1. 录制包含事件话题的 ROS1 bag
+2. 用 `simple_image_recon` 将事件流重建成图像 bag
+3. 用 Kalibr 对重建图像话题做内参标定
 
-当前脚本默认面向单个事件相机话题，输入事件消息类型为 `dv_ros_msgs/EventArray`。
+当前主标定入口是 `scripts/event_camera_intrinsics_calib.sh`，默认面向单个事件相机话题，输入事件消息类型为 `dv_ros_msgs/EventArray`。
 
 ## Files
 
+- `scripts/README.md`: 本文档
+- `scripts/record.sh`: 录制 ROS1 bag 的辅助脚本
 - `scripts/event_camera_intrinsics_calib.sh`: 主标定脚本
-- `scripts/README_event_camera_intrinsics_calib.md`: 本文档
 - `scripts/start.sh`: 仓库内示例启动命令
 - `scripts/gen_target.sh`: 调用 `kalibr_create_target_pdf` 生成 AprilTag 标定板 PDF 的辅助命令
 - `scripts/target.pdf`: 当前目录下的示例标定板 PDF
+
+## Run from Repo Root
+
+下面的示例命令默认都需要在项目根目录执行：
+
+```bash
+cd /workspace/calib_nail
+```
+
+原因是这些脚本示例里使用了相对路径，例如：
+
+- `scripts/...`
+- `data/calibr.bag`
+- `data/calib_output`
+
+如果你不在项目根目录执行，录制和标定相关路径可能会落到错误位置。
 
 ## Prerequisites
 
@@ -27,14 +45,13 @@
 - `devel/setup.bash` 存在。
 - `rosrun simple_image_recon bag_to_frames` 可以被找到。
 - `rosrun kalibr kalibr_calibrate_cameras` 可以被找到。
-- 输入数据是 ROS1 `.bag` 文件。
-- bag 中包含事件话题，例如 `/capture_node/events`。
+- 事件相机驱动已经启动，并且 `/capture_node/events` 正在发布。
 
 如果你还没有完成构建，先看根文档中的编译说明：
 
 - [README.md](/workspace/calib_nail/README.md)
 
-默认脚本会 source：
+默认标定脚本会 source：
 
 ```bash
 /workspace/calib_nail/devel/setup.bash
@@ -42,11 +59,38 @@
 
 如果你的 workspace 不在这个路径，使用 `--workspace-dir` 或 `--setup-bash` 覆盖即可。
 
-## Quick Start
+## Record Data
 
-### 1. Checkerboard
+录制脚本当前内容是：
 
 ```bash
+rosbag record /capture_node/events -O data/calibr
+```
+
+在项目根目录执行：
+
+```bash
+cd /workspace/calib_nail
+bash scripts/record.sh
+```
+
+录制成功后，输出文件会是：
+
+```bash
+data/calibr.bag
+```
+
+停止录制时，在运行中的终端里按 `Ctrl+C` 即可。
+
+## Quick Start
+
+### 1. Run the Main Calibration Script
+
+在项目根目录执行：
+
+```bash
+cd /workspace/calib_nail
+
 bash scripts/event_camera_intrinsics_calib.sh \
   --input-bag data/calibr.bag \
   --output-dir data/calib_output \
@@ -58,9 +102,13 @@ bash scripts/event_camera_intrinsics_calib.sh \
   --col-spacing-m 0.03
 ```
 
-### 2. AprilTag Grid
+### 2. AprilTag Grid Example
+
+在项目根目录执行：
 
 ```bash
+cd /workspace/calib_nail
+
 bash scripts/event_camera_intrinsics_calib.sh \
   --input-bag data/calibr.bag \
   --output-dir data/calib_output \
@@ -74,7 +122,11 @@ bash scripts/event_camera_intrinsics_calib.sh \
 
 ### 3. Use Existing Target YAML
 
+在项目根目录执行：
+
 ```bash
+cd /workspace/calib_nail
+
 bash scripts/event_camera_intrinsics_calib.sh \
   --input-bag data/calibr.bag \
   --output-dir data/calib_output \
@@ -84,9 +136,10 @@ bash scripts/event_camera_intrinsics_calib.sh \
 
 ### 4. Use the Included Start Script
 
-如果你只是想快速复用仓库里的默认示例，也可以直接运行：
+如果你只是想快速复用仓库里的默认示例，也可以在项目根目录执行：
 
 ```bash
+cd /workspace/calib_nail
 bash scripts/start.sh
 ```
 
@@ -330,9 +383,10 @@ rosrun kalibr kalibr_calibrate_cameras \
 
 ## Target Board
 
-当前目录还提供了一个辅助生成脚本：
+当前目录还提供了一个辅助生成脚本。在项目根目录执行：
 
 ```bash
+cd /workspace/calib_nail
 bash scripts/gen_target.sh
 ```
 
@@ -376,5 +430,6 @@ rosrun kalibr kalibr_create_target_pdf --type apriltag --nx 4 --ny 4 --tsize 0.0
 查看脚本帮助：
 
 ```bash
+cd /workspace/calib_nail
 bash scripts/event_camera_intrinsics_calib.sh --help
 ```

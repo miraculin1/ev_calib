@@ -127,6 +127,6 @@ bash scripts/event_camera_intrinsics_calib.sh \
 ## Related Docs
 
 - 脚本入口：[scripts/event_camera_intrinsics_calib.sh](/workspace/calib_nail/scripts/event_camera_intrinsics_calib.sh)
-- 详细使用说明：[scripts/README_event_camera_intrinsics_calib.md](/workspace/calib_nail/scripts/README_event_camera_intrinsics_calib.md)
+- 详细使用说明：[scripts/README.md](/workspace/calib_nail/scripts/README.md)
 - 事件重建说明：[src/simple_image_recon/README.md](/workspace/calib_nail/src/simple_image_recon/README.md)
 - Kalibr 上游说明：[src/kalibr/README.md](/workspace/calib_nail/src/kalibr/README.md)
