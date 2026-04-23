@@ -3,7 +3,7 @@
 	url = https://github.com/ethz-asl/kalibr.git
 [submodule "src/simple_image_recon"]
 	path = src/simple_image_recon
-	url = https://github.com/berndpfrommer/simple_image_recon.git
+	url = https://github.com/miraculin1/simple_image_recon.git
 [submodule "src/event_camera_msgs"]
 	path = src/event_camera_msgs
 	url = https://github.com/ros-event-camera/event_camera_msgs.git
@@ -13,3 +13,6 @@
 [submodule "src/event_camera_codecs"]
 	path = src/event_camera_codecs
 	url = https://github.com/ros-event-camera/event_camera_codecs.git
+[submodule "src/dv-ros"]
+	path = src/dv-ros
+	url = https://github.com/miraculin1/dv-ros.git
