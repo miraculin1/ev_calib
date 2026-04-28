@@ -1,6 +1,6 @@
 [submodule "src/kalibr"]
 	path = src/kalibr
-	url = https://github.com/ethz-asl/kalibr.git
+	url = https://github.com/miraculin1/kalibr.git
 [submodule "src/simple_image_recon"]
 	path = src/simple_image_recon
 	url = https://github.com/miraculin1/simple_image_recon.git
