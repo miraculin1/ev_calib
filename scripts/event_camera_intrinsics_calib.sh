@@ -14,10 +14,10 @@ RECON_BAG=""
 EVENT_TOPIC=""
 IMAGE_TOPIC=""
 FPS="30"
-CUTOFF_PERIOD="30"
+CUTOFF_PERIOD="40"
 TIME_OFFSET="0"
 CAMERA_MODEL="pinhole-radtan"
-BAG_FREQ="5"
+BAG_FREQ="30"
 APPROX_SYNC=""
 TARGET_YAML=""
 TARGET_TYPE=""
@@ -34,6 +34,7 @@ SHOW_EXTRACTION=0
 KALIBR_VERBOSE=0
 EXPORT_POSES=0
 KEEP_TEMP=0
+SKIP_RECONSTRUCTION=0
 
 usage() {
   cat <<'EOF'
@@ -70,6 +71,7 @@ Optional reconstruction arguments:
   --fps VALUE                   Reconstruction frame rate. Default: 30.
   --cutoff-period N             simple_image_recon cutoff period. Default: 30.
   --time-offset SEC             Positive offset passed to bag_to_frames. Default: 0.
+  --skip-reconstruction         Skip bag_to_frames and use an existing reconstructed bag.
 
 Optional Kalibr arguments:
   --camera-model MODEL          Kalibr camera model. Default: pinhole-radtan.
@@ -237,6 +239,10 @@ while [[ $# -gt 0 ]]; do
       KEEP_TEMP=1
       shift
       ;;
+    --skip-reconstruction)
+      SKIP_RECONSTRUCTION=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -385,13 +391,17 @@ log "Event topic: ${EVENT_TOPIC}"
 log "Image topic: ${IMAGE_TOPIC}"
 log "Target yaml: ${TARGET_YAML}"
 
-log "Running event reconstruction"
-(
-  set -euo pipefail
-  source "${SETUP_BASH}"
-  append_cmd "${RECON_CMD[@]}"
-  "${RECON_CMD[@]}"
-) 2>&1 | tee "${RECON_LOG}"
+if [[ "${SKIP_RECONSTRUCTION}" -eq 1 ]]; then
+  log "Skipping event reconstruction"
+else
+  log "Running event reconstruction"
+  (
+    set -euo pipefail
+    source "${SETUP_BASH}"
+    append_cmd "${RECON_CMD[@]}"
+    "${RECON_CMD[@]}"
+  ) 2>&1 | tee "${RECON_LOG}"
+fi
 
 require_file "${RECON_BAG}"
 
@@ -399,6 +409,7 @@ log "Running Kalibr camera calibration"
 (
   set -euo pipefail
   source "${SETUP_BASH}"
+  export KALIBR_MANUAL_FOCAL_LENGTH_INIT=1
   append_cmd "${KALIBR_CMD[@]}"
   "${KALIBR_CMD[@]}"
 ) 2>&1 | tee "${KALIBR_LOG}"

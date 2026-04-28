@@ -393,10 +393,10 @@ bash scripts/gen_target.sh
 它当前实际执行的是：
 
 ```bash
-rosrun kalibr kalibr_create_target_pdf --type apriltag --nx 4 --ny 4 --tsize 0.05 --tspace 0.5
+rosrun kalibr kalibr_create_target_pdf --type apriltag --nx 4 --ny 4 --tsize 0.005 --tspace 0.5 --no-annotations
 ```
 
-这会生成一个 4x4 的 AprilTag 标定板 PDF。`scripts/target.pdf` 是当前目录下保存的示例板文件。
+这会生成一个不带文字和坐标系箭头的 4x4 AprilTag 标定板 PDF。`scripts/target.pdf` 是当前目录下保存的示例板文件。
 
 注意：这份 4x4 标定板和上面主脚本示例里使用的 6x6 AprilTag 参数不是同一个板。实际标定时，必须确保以下三者一致：
 
